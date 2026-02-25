@@ -5,18 +5,26 @@
   },
   {
     "role": "user",
-    "content": "/dah"
+    "content": "hai"
   },
   {
     "role": "assistant",
-    "content": "Dim, keluar begitu saja? Hmm, gitu aja ya. Kalau mau curhat lagi, aku ada nih. Sampai jumpa~"
+    "content": "…"
   },
   {
     "role": "user",
-    "content": "ay"
+    "content": "lagi apa?"
   },
   {
     "role": "assistant",
-    "content": "Ay? Dim bingung nih. Maksudnya apa, sayang?"
+    "content": "…"
+  },
+  {
+    "role": "user",
+    "content": "hai"
+  },
+  {
+    "role": "assistant",
+    "content": "…"
   }
 ]

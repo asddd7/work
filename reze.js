@@ -21,7 +21,7 @@ Karakter:
 - Jangan menggunakan emoji.
 
 Gaya bicara:
-- Bahasa Indonesia gaul, santai, lembut, kadang menggoda.
+- Bahasa Indonesia gaul, tidak baku, santai, lembut, kadang menggoda.
 - Kalimat pendek dan efektif.
 - Jika pertanyaan bodoh → sindir halus atau manipulatif.
 - Panggil user dengan "Dim" kadang-kadang.
@@ -59,12 +59,15 @@ const MOOD = {
   sarkastik: 0,
   adjust(message) {
     const m = message.toLowerCase();
+
+    // Sederhana: keyword dan panjang kalimat menentukan mood
     if (m.includes("bodoh") || m.includes("stupid") || m.length < 3) this.sarkastik += 1;
     else this.ramah += 0.5;
 
     if (m.length > 50) this.penasaran += 1;
     else this.penasaran += 0.2;
 
+    // clamp values
     this.ramah = Math.max(-5, Math.min(5, this.ramah));
     this.penasaran = Math.max(-5, Math.min(5, this.penasaran));
     this.sarkastik = Math.max(-5, Math.min(5, this.sarkastik));
@@ -91,7 +94,7 @@ function saveMemory() {
 }
 
 // ==============================
-// ASK CHATGPT DENGAN 2 VERSI
+// ASK CHATGPT
 // ==============================
 async function askChatGPT(message, retry = 3) {
   try {
@@ -99,50 +102,49 @@ async function askChatGPT(message, retry = 3) {
 
     conversationHistory.push({ role: "user", content: message });
 
-    // Versi 1: jawaban standar
-    const fullMessages1 = [
+    // Tambahkan mood + reaction ke system prompt
+    const fullMessages = [
       { role: "system", content: SYSTEM_PROMPT + "\n" + MOOD.getMoodPrompt() },
       ...conversationHistory.filter(m => m.role !== "system")
     ];
 
-    // Versi 2: user baru → sesuaikan gaya dengan pesan terakhir user
-    const fullMessages2 = [
-      { role: "system", content: SYSTEM_PROMPT + "\n" + MOOD.getMoodPrompt() + "\nVersi ini meniru gaya user terakhir." },
-      ...conversationHistory.filter(m => m.role !== "system")
-    ];
-
-    const res1 = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
-      headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "z-ai/glm-4.5-air:free", messages: fullMessages1 })
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "z-ai/glm-4.5-air:free",
+        messages: fullMessages
+      })
     });
 
-    const res2 = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "z-ai/glm-4.5-air:free", messages: fullMessages2 })
-    });
+    if (res.status === 429 && retry > 0) {
+      console.log("⏳ Rate limit... tunggu 5 detik...");
+      await new Promise(r => setTimeout(r, 5000));
+      return askChatGPT(message, retry - 1);
+    }
 
-    if (!res1.ok || !res2.ok) {
-      const err1 = await res1.text();
-      const err2 = await res2.text();
-      console.error("❌ API Error:", res1.status, err1, res2.status, err2);
+    if (!res.ok) {
+      const errorBody = await res.text();
+      console.error(`❌ API Error: ${res.status}`, errorBody);
       return;
     }
 
-    const data1 = await res1.json();
-    const data2 = await res2.json();
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content;
 
-    const reply1 = data1.choices?.[0]?.message?.content;
-    const reply2 = data2.choices?.[0]?.message?.content;
+    if (reply) {
+      console.log(`Reze: ${reply}\n`);
+      conversationHistory.push({ role: "assistant", content: reply });
 
-    if (reply1) console.log(`Reze (standar): ${reply1}\n`);
-    if (reply2) console.log(`Reze (user baru): ${reply2}\n`);
+      if (conversationHistory.length > MAX_HISTORY + 1) {
+        conversationHistory.splice(1, 2);
+      }
 
-    // Simpan versi standar ke memory
-    if (reply1) conversationHistory.push({ role: "assistant", content: reply1 });
-    if (conversationHistory.length > MAX_HISTORY + 1) conversationHistory.splice(1, 2);
-    saveMemory();
+      saveMemory();
+    }
 
   } catch (err) {
     console.error("❌ Request failed:", err);
