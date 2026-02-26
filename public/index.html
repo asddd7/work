@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reze Chat</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Chat dengan Reze</h1>
-  <div id="chat"></div>
-  <div id="input-container">
-    <input id="input" type="text" placeholder="Ketik di sini..." />
-    <button id="send">Kirim</button>
+
+  <div class="app">
+    <header>
+      <h1>Reze AI</h1>
+      <span class="status">● Online</span>
+    </header>
+
+    <div id="chat" class="chat-box"></div>
+
+    <div id="input-container">
+      <input id="input" type="text" placeholder="Ketik sesuatu ke Reze..." />
+      <button id="send">➤</button>
+    </div>
   </div>
 
   <script src="script.js"></script>

@@ -1,89 +1,110 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  padding: 0;
+* {
   margin: 0;
-  background: #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
   height: 100vh;
+  background: linear-gradient(135deg, #0f0f1b, #1a1a2e);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-h1 {
-  margin-top: 20px;
-  color: #5c0d87;
-}
-
-#chat {
-  border-radius: 10px;
-  padding: 10px;
-  width: 90%;
-  max-width: 600px;
-  height: 60%;
-  overflow-y: auto;
-  background: #000000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.app {
+  width: 100%;
+  max-width: 500px;
+  height: 90vh;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
 
-.bubble {
-  padding: 10px 15px;
-  border-radius: 20px;
-  max-width: 70%;
-  word-wrap: break-word;
-  animation: fadeIn 0.3s ease;
+header {
+  padding: 15px;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.status {
+  color: #00ff88;
+  font-size: 14px;
+}
+
+.chat-box {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  padding: 10px 14px;
+  border-radius: 15px;
+  max-width: 75%;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .user {
   align-self: flex-end;
-  background: #007bff;
-  color: #fff;
-  border-bottom-right-radius: 0;
+  background: linear-gradient(135deg, #0084ff, #005eff);
+  color: white;
+  border-bottom-right-radius: 5px;
 }
 
 .bot {
   align-self: flex-start;
-  background: #9b59b6;
+  background: rgba(255,255,255,0.1);
   color: #fff;
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 5px;
 }
 
 #input-container {
-  width: 90%;
-  max-width: 600px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  padding: 10px;
+  background: rgba(0,0,0,0.4);
 }
 
 #input {
   flex: 1;
   padding: 10px;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 #send {
-  padding: 10px 20px;
+  margin-left: 10px;
+  padding: 0 15px;
+  border-radius: 50%;
   border: none;
-  border-radius: 20px;
-  background: #5c0d87;
-  color: #fff;
-  font-weight: bold;
+  background: #ff2e63;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: 0.2s;
 }
 
 #send:hover {
-  background: #7a2dbb;
+  background: #ff4d80;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
+@media (max-width: 500px) {
+  .app {
+    height: 100vh;
+    border-radius: 0;
+  }
 }
