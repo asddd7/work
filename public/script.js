@@ -8,11 +8,12 @@ function appendMessage(text, cls) {
   div.innerText = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
+}
 
-  // Animate avatar mouth (simple)
-  const avatar = document.getElementById('avatar');
-  avatar.style.transform = 'scale(1.05)';
-  setTimeout(() => avatar.style.transform = 'scale(1)', 200);
+let userId = localStorage.getItem('userId');
+if (!userId) {
+  userId = crypto.randomUUID();
+  localStorage.setItem('userId', userId);
 }
 
 async function sendMessage() {
@@ -22,10 +23,10 @@ async function sendMessage() {
   input.value = '';
 
   try {
-    const res = await fetch('http://localhost:3000/chat', { // pastikan endpoint server Node.js-mu
+    const res = await fetch('http://localhost:3000/chat', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({message})
+      body: JSON.stringify({ message, userId })
     });
     const data = await res.json();
     appendMessage(data.reply, 'bot');
@@ -36,13 +37,6 @@ async function sendMessage() {
 }
 
 send.addEventListener('click', sendMessage);
-input.addEventListener('keypress', (e) => {
+input.addEventListener('keypress', e => {
   if (e.key === 'Enter') sendMessage();
 });
-
-let userId = localStorage.getItem("userId");
-
-if (!userId) {
-  userId = "user_" + Math.random().toString(36).substring(2);
-  localStorage.setItem("userId", userId);
-}

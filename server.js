@@ -1,11 +1,14 @@
-import express from "express";
-import chatRoute from "./src/routes/chat.js";
+import express from 'express';
+import cors from 'cors';
+import chatRoute from './routes/chat.js';
+import 'dotenv/config';
 
+const PORT = process.env.PORT || 3000;
 const app = express();
-const PORT = 3000;
 
-app.use(express.json());
-app.use(express.static("public"));
+app.use(cors());                // izinkan akses dari browser
+app.use(express.json());         // parse JSON
+app.use(express.static("public")) // folder web (index.html + script.js)
 
 app.use("/chat", chatRoute);
 
