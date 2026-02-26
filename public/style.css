@@ -1,47 +1,32 @@
 body {
-  margin: 0;
-  padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #f0f0f0;
+  padding: 0;
+  margin: 0;
+  background: #e0e0e0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
 }
 
-#vtuber-chat-container {
-  display: flex;
-  gap: 20px;
-  width: 80%;
-  max-width: 900px;
-}
-
-#avatar-container {
-  width: 200px;
-}
-
-#avatar {
-  width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-#chat-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+h1 {
+  margin-top: 20px;
+  color: #5c0d87;
 }
 
 #chat {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 15px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 90%;
+  max-width: 600px;
+  height: 60%;
   overflow-y: auto;
+  background: #fdfdfd;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .bubble {
@@ -49,6 +34,7 @@ body {
   border-radius: 20px;
   max-width: 70%;
   word-wrap: break-word;
+  animation: fadeIn 0.3s ease;
 }
 
 .user {
@@ -66,9 +52,11 @@ body {
 }
 
 #input-container {
+  width: 90%;
+  max-width: 600px;
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 #input {
@@ -76,6 +64,7 @@ body {
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
+  outline: none;
   font-size: 16px;
 }
 
@@ -83,7 +72,7 @@ body {
   padding: 10px 20px;
   border: none;
   border-radius: 20px;
-  background: #9b59b6;
+  background: #5c0d87;
   color: #fff;
   font-weight: bold;
   cursor: pointer;
@@ -91,5 +80,10 @@ body {
 }
 
 #send:hover {
-  background: #b275c8;
+  background: #7a2dbb;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
 }

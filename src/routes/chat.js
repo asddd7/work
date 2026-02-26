@@ -26,10 +26,21 @@ Karakter:
     { role: 'user', content: message }
   ];
 
-  const reply = await getAIResponse(messages);
+  let reply;
+  try {
+    reply = await getAIResponse(messages);
+  } catch (err) {
+    console.error("❌ AI Response Error:", err);
+    reply = "Maaf, aku gagal merespon sekarang.";
+  }
 
+  // simpan history dengan batasan
   userHistories[userId].push({ role: 'user', content: message });
   userHistories[userId].push({ role: 'assistant', content: reply });
+  const MAX_HISTORY = 15;
+  if (userHistories[userId].length > MAX_HISTORY * 2) {
+    userHistories[userId].splice(0, 2); // hapus user+bot paling lama
+  }
 
   res.json({ reply });
 });

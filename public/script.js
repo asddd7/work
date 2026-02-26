@@ -10,12 +10,6 @@ function appendMessage(text, cls) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-let userId = localStorage.getItem('userId');
-if (!userId) {
-  userId = crypto.randomUUID();
-  localStorage.setItem('userId', userId);
-}
-
 async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
@@ -23,7 +17,7 @@ async function sendMessage() {
   input.value = '';
 
   try {
-    const res = await fetch('http://localhost:3000/chat', {
+    const res = await fetch('http://localhost:3000/chat', { // ganti dengan ngrok URL jika online
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ message, userId })
@@ -37,6 +31,12 @@ async function sendMessage() {
 }
 
 send.addEventListener('click', sendMessage);
-input.addEventListener('keypress', e => {
+input.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') sendMessage();
 });
+
+let userId = localStorage.getItem('userId');
+if (!userId) {
+  userId = crypto.randomUUID();
+  localStorage.setItem('userId', userId);
+}
