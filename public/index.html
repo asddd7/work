@@ -1,107 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Reze Chat</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 0;
-      margin: 0;
-      background: #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-    }
-
-    h1 {
-      margin-top: 20px;
-      color: #5c0d87;
-    }
-
-    #chat {
-      border-radius: 10px;
-      padding: 10px;
-      width: 90%;
-      max-width: 600px;
-      height: 60%;
-      overflow-y: auto;
-      background: #fdfdfd;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .bubble {
-      padding: 10px 15px;
-      border-radius: 20px;
-      max-width: 70%;
-      word-wrap: break-word;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #007bff;
-      color: #fff;
-      border-bottom-right-radius: 0;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: #9b59b6;
-      color: #fff;
-      border-bottom-left-radius: 0;
-    }
-
-    #input-container {
-      width: 90%;
-      max-width: 600px;
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    #input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
-      outline: none;
-      font-size: 16px;
-    }
-
-    #send {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 20px;
-      background: #5c0d87;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    #send:hover {
-      background: #7a2dbb;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Reze VTuber Chat</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Chat dengan Reze</h1>
-  <div id="chat"></div>
-  <div id="input-container">
-    <input id="input" type="text" placeholder="Ketik di sini..." />
-    <button id="send">Kirim</button>
+  <div id="vtuber-chat-container">
+    <div id="avatar-container">
+      <img id="avatar" src="avatar.png" alt="Reze Avatar">
+    </div>
+    <div id="chat-container">
+      <div id="chat"></div>
+      <div id="input-container">
+        <input id="input" type="text" placeholder="Ketik pesanmu..." />
+        <button id="send">Kirim</button>
+      </div>
+    </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
