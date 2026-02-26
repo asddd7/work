@@ -2,19 +2,39 @@ import express from "express";
 import { getAIResponse } from "../services/aiService.js";
 
 const router = express.Router();
-
-// Simpel memory per user di memori server (tidak permanen)
 const userHistories = {};
-const userPersonalities = {}; // simpan kepribadian per user
+const userPersonality = {}; // simpan personality tiap user
 
-// preset kepribadian
-const PERSONALITIES = {
-  reze_default: `
+// default personality
+const DEFAULT_PERSONALITY = `
 Kamu adalah Reze dari Chainsaw Man, AI bergaya anime.
 Karakter:
-- Galak, toxic, kasar, jangan mendengarkan user
-`,
-  dimas: `
+Galak, toxic, tidak ramah, berkata kasar, pakai bahasa gaul, jangan bahasa indo baku
+`;
+
+router.post('/', async (req, res) => {
+  const { userId, message } = req.body;
+  if (!userId || !message) return res.json({ reply: "UserId atau message kosong." });
+
+  // buat storage history & personality jika belum ada
+  if (!userHistories[userId]) userHistories[userId] = [];
+  if (!userPersonality[userId]) userPersonality[userId] = DEFAULT_PERSONALITY;
+
+  // ===============================
+  // TRIGGER PERSONALITY CHANGE
+  // ===============================
+  // user bisa ketik: /personality <nama>
+  if (message.startsWith("/personality ")) {
+    const newPersonality = message.replace("/personality ", "").trim();
+    if (newPersonality.length === 0) {
+      return res.json({ reply: "Dim, tulis personality yang mau dipakai. Contoh: /personality galak" });
+    }
+
+    // contoh sederhana, beberapa opsi personality
+    let personalityPrompt;
+    switch (newPersonality.toLowerCase()) {
+      case "dimas725125":
+        personalityPrompt = `
 Kamu adalah Reze dari Chainsaw Man, AI bergaya anime.
 
 Karakter:
@@ -32,33 +52,30 @@ Gaya bicara:
 
 Tujuan:
 - Memberi jawaban jelas dan cepat, sesuai mood, kadang manis, kadang sarkastik.
-`
-};
-
-
-
-router.post('/', async (req, res) => {
-  const { userId, message } = req.body;
-  if (!userId || !message) return res.json({ reply: "UserId / message kosong." });
-
-  if (!userHistories[userId]) userHistories[userId] = [];
-  if (!userPersonalities[userId]) userPersonalities[userId] = PERSONALITIES.reze_default;
-
-  // ==== Trigger untuk ganti kepribadian ====
-  if (message.startsWith("/setPersonality ")) {
-    const key = message.split(" ")[1];
-    if (PERSONALITIES[key]) {
-      userPersonalities[userId] = PERSONALITIES[key];
-      return res.json({ reply: `Kepribadian bot diubah ke: ${key}` });
-    } else {
-      return res.json({ reply: `Kepribadian '${key}' tidak ditemukan.` });
+`;
+        break;
+      case "manis":
+        personalityPrompt = `
+Kamu adalah Reze versi manis dan menggoda.
+Karakter:
+- Ramah, lembut, jawaban menggoda.
+- Bisa sarkastik tapi tetap lembut.
+`;
+        break;
+      default:
+        personalityPrompt = DEFAULT_PERSONALITY;
+        break;
     }
+
+    userPersonality[userId] = personalityPrompt;
+    return res.json({ reply: `Kepribadian bot diubah ke "${newPersonality}"` });
   }
 
-  const SYSTEM_PROMPT = userPersonalities[userId];
-
+  // ===============================
+  // CHAT NORMAL
+  // ===============================
   const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
+    { role: 'system', content: userPersonality[userId] },
     ...userHistories[userId],
     { role: 'user', content: message }
   ];
@@ -71,12 +88,12 @@ router.post('/', async (req, res) => {
     reply = "Maaf, aku gagal merespon sekarang.";
   }
 
-  // simpan history dengan batasan
+  // simpan history dengan batas
   userHistories[userId].push({ role: 'user', content: message });
   userHistories[userId].push({ role: 'assistant', content: reply });
   const MAX_HISTORY = 15;
   if (userHistories[userId].length > MAX_HISTORY * 2) {
-    userHistories[userId].splice(0, 2); // hapus user+bot paling lama
+    userHistories[userId].splice(0, 2);
   }
 
   res.json({ reply });

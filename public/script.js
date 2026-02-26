@@ -17,7 +17,8 @@ async function sendMessage() {
   input.value = '';
 
   try {
-    const res = await fetch('https://lobate-louetta-uniconoclastically.ngrok-free.dev/chat', { //fetch('http://localhost:3000/chat', {  ganti dengan ini jika offline
+    const res = await fetch('https://lobate-louetta-uniconoclastically.ngrok-free.dev/chat', { //fetch('http://localhost:3000/chat',   ganti dengan ini jika offline
+                                                                                              //fetch('https://lobate-louetta-uniconoclastically.ngrok-free.dev/chat', ganti ini kalau online
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ message, userId })
@@ -40,3 +41,4 @@ if (!userId) {
   userId = crypto.randomUUID();
   localStorage.setItem('userId', userId);
 }
+
