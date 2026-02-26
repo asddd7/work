@@ -26,5 +26,13 @@
   {
     "role": "assistant",
     "content": "…"
+  },
+  {
+    "role": "user",
+    "content": "hai"
+  },
+  {
+    "role": "assistant",
+    "content": "Dim~ Lagi ngapain nih? Udah beberapa kali bilang hai loh~ 😊"
   }
 ]

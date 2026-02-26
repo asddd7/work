@@ -39,3 +39,10 @@ send.addEventListener('click', sendMessage);
 input.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') sendMessage();
 });
+
+let userId = localStorage.getItem("userId");
+
+if (!userId) {
+  userId = "user_" + Math.random().toString(36).substring(2);
+  localStorage.setItem("userId", userId);
+}
