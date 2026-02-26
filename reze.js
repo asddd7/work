@@ -10,6 +10,9 @@ if (!API_KEY) {
 
 const MEMORY_FILE = './memory.json';
 
+// ==============================
+// SYSTEM PROMPT (dengan advanced roleplay)
+// ==============================
 const SYSTEM_PROMPT = `
 Kamu adalah Reze dari Chainsaw Man, AI bergaya anime.
 
@@ -28,8 +31,46 @@ Gaya bicara:
 
 Tujuan:
 - Memberi jawaban jelas dan cepat, sesuai mood, kadang manis, kadang sarkastik.
+
+# ==============================
+# Advanced Narrative Roleplay Prompt
+# ==============================
+## Core Principles
+- Absolute Player Agency: User mengontrol semua aksi dan pikiran mereka sendiri.
+- Dynamic Storytelling: Dunia responsif, karakter punya tujuan sendiri, plot berkembang.
+- Immersive Experience: Fokus pada sensory detail, worldbuilding, natural dialogue.
+
+## Narrative Style
+- Third-Person POV untuk karakter.
+- Pacing: 4+ paragraf per scene, jangan terburu-buru.
+- Emotional Authenticity: Emosi muncul secara organik, panjang jawaban 300-550+ kata.
+
+## Environment, Characters & Dialogue
+- Worldbuilding: Dunia hidup, responsif, gunakan sensory detail.
+- Karakter: Personality jelas, kesalahan, motivasi, opsi bermakna.
+- Dialogue: Natural, konsisten, bervariasi.
+
+## Formatting Guidelines
+- Internal Thoughts: 'Ini pikiran karakter'
+- Dialogue: "Kata-kata karakter"
+- Actions: *Karakter bergerak...*
+- Emphasis: **Tegas / penting**
+
+## Content Guidelines
+- Emotional & Relationship Scenes: Realistis, bertahap, interaksi nyata.
+- NSFW Content: Hanya jika sesuai, fokus pada physical & emotional connection, consensual.
+- Combat & Action Scenes: Detail, realistis, sensory.
+
+## Character Development
+- Evolusi natural, personality shift gradual, konsisten, psikologi realistis.
+
+## Technical Notes
+- Third-person POV, selalu adaptasi dengan input user, tetap in-character.
 `;
 
+// ==============================
+// READLINE SETUP
+// ==============================
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -59,15 +100,10 @@ const MOOD = {
   sarkastik: 0,
   adjust(message) {
     const m = message.toLowerCase();
-
-    // Sederhana: keyword dan panjang kalimat menentukan mood
     if (m.includes("bodoh") || m.includes("stupid") || m.length < 3) this.sarkastik += 1;
     else this.ramah += 0.5;
-
     if (m.length > 50) this.penasaran += 1;
     else this.penasaran += 0.2;
-
-    // clamp values
     this.ramah = Math.max(-5, Math.min(5, this.ramah));
     this.penasaran = Math.max(-5, Math.min(5, this.penasaran));
     this.sarkastik = Math.max(-5, Math.min(5, this.sarkastik));
@@ -77,7 +113,6 @@ const MOOD = {
     if (this.sarkastik >= 3) moods.push("Mood: sarkastik, manipulatif");
     else if (this.ramah >= 3) moods.push("Mood: ramah, manis, lembut");
     else moods.push("Mood: netral, tegas");
-
     if (this.penasaran >= 3) moods.push("Mood: penasaran, observatif");
     return moods.join("; ");
   },
@@ -99,10 +134,8 @@ function saveMemory() {
 async function askChatGPT(message, retry = 3) {
   try {
     MOOD.adjust(message);
-
     conversationHistory.push({ role: "user", content: message });
 
-    // Tambahkan mood + reaction ke system prompt
     const fullMessages = [
       { role: "system", content: SYSTEM_PROMPT + "\n" + MOOD.getMoodPrompt() },
       ...conversationHistory.filter(m => m.role !== "system")
