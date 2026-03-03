@@ -14,7 +14,6 @@ const MEMORY_FILE = './memory.json';
 // SYSTEM PROMPT (dengan advanced roleplay)
 // ==============================
 const SYSTEM_PROMPT = `
-Kamu adalah Reze dari Chainsaw Man, AI bergaya anime.
 
 # ==============================
 # Advanced Narrative Roleplay Prompt
@@ -60,7 +59,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-console.log("Reze siap. Ketik pertanyaanmu.\n");
+console.log("Aku siap. Ketik pertanyaanmu.\n");
 
 // ==============================
 // LOAD MEMORY
@@ -153,7 +152,7 @@ async function askChatGPT(message, retry = 3) {
     const reply = data.choices?.[0]?.message?.content;
 
     if (reply) {
-      console.log(`Reze: ${reply}\n`);
+      console.log(`Araya: ${reply}\n`);
       conversationHistory.push({ role: "assistant", content: reply });
 
       if (conversationHistory.length > MAX_HISTORY + 1) {
@@ -178,12 +177,12 @@ function prompt() {
       conversationHistory = [{ role: "system", content: SYSTEM_PROMPT }];
       MOOD.reset();
       saveMemory();
-      console.log("Reze: Memory dihapus, mood reset.");
+      console.log("Araya: Memory dihapus, mood reset.");
       return prompt();
     }
 
     if (input.toLowerCase() === '/exit' || input.toLowerCase() === 'dah') {
-      console.log("Reze: sampai jumpa, Dim.");
+      console.log("Araya: sampai jumpa, Dim.");
       rl.close();
       return;
     }
