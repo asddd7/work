@@ -1,0 +1,26 @@
+[
+  {
+    "role": "user",
+    "content": "hai"
+  },
+  {
+    "role": "assistant",
+    "content": "Maaf, AI gagal merespon (API error)."
+  },
+  {
+    "role": "user",
+    "content": "hai"
+  },
+  {
+    "role": "assistant",
+    "content": "Maaf, AI gagal merespon (API error)."
+  },
+  {
+    "role": "user",
+    "content": "hai"
+  },
+  {
+    "role": "assistant",
+    "content": "Hai~ ✨ Ada yang bisa Reze bantu? *senyum lembut dengan mata berbinar* ♪"
+  }
+]

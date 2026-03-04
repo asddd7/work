@@ -1,14 +1,41 @@
 import readline from "readline";
+import fs from "fs";
 import { getAIResponse } from "./services/aiService.js";
 
-// Memory per user
-const userHistories = [];
+const MEMORY_FILE = "./memory2.json";
+
+let userHistories = [];
 let currentMode = "normal";
 
-// Prompt RP
+// =========================
+// LOAD MEMORY SAAT START
+// =========================
+if (fs.existsSync(MEMORY_FILE)) {
+  try {
+    const data = fs.readFileSync(MEMORY_FILE, "utf-8");
+    userHistories = JSON.parse(data);
+    console.log("📂 Memory loaded dari memory2.json");
+  } catch (err) {
+    console.log("⚠️ Gagal load memory, reset...");
+    userHistories = [];
+  }
+} else {
+  fs.writeFileSync(MEMORY_FILE, JSON.stringify([], null, 2));
+}
+
+// =========================
+// SAVE MEMORY FUNCTION
+// =========================
+function saveMemory() {
+  fs.writeFileSync(MEMORY_FILE, JSON.stringify(userHistories, null, 2));
+}
+
+// =========================
+// PROMPTS
+// =========================
+
 const ADVANCED_RP_PROMPT = `
 # Advanced Narrative Roleplay Prompt
-
 - Third-Person POV
 - 300-550+ kata
 - Immersive, sensory detail
@@ -18,13 +45,16 @@ const ADVANCED_RP_PROMPT = `
 - Dynamic storytelling
 `;
 
-// Prompt normal
 const NORMAL_PROMPT = `
 Kamu adalah Reze dari Chainsaw Man, AI bergaya anime.
 - Manis, ramah, misterius.
 - Kadang manipulatif dan sarkastik.
 - Jawaban lembut dan menggoda.
 `;
+
+// =========================
+// TERMINAL INTERFACE
+// =========================
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -34,6 +64,7 @@ const rl = readline.createInterface({
 
 console.log("🔥 AI Terminal Mode Aktif!");
 console.log("Ketik /setMode rp untuk roleplay.");
+console.log("Ketik /reset untuk hapus memory.");
 console.log("Ketik /exit untuk keluar.\n");
 
 rl.prompt();
@@ -44,6 +75,15 @@ rl.on("line", async (line) => {
   if (message === "/exit") {
     console.log("👋 Keluar...");
     process.exit(0);
+  }
+
+  // RESET MEMORY
+  if (message === "/reset") {
+    userHistories = [];
+    saveMemory();
+    console.log("🗑️ Memory dihapus.\n");
+    rl.prompt();
+    return;
   }
 
   // Ganti mode
@@ -59,7 +99,6 @@ rl.on("line", async (line) => {
     return;
   }
 
-  // Pilih system prompt
   const SYSTEM_PROMPT =
     currentMode === "rp" ? ADVANCED_RP_PROMPT : NORMAL_PROMPT;
 
@@ -77,11 +116,13 @@ rl.on("line", async (line) => {
     userHistories.push({ role: "user", content: message });
     userHistories.push({ role: "assistant", content: reply });
 
-    // batasi memory
+    // Batasi memory
     const MAX_HISTORY = 20;
     if (userHistories.length > MAX_HISTORY * 2) {
       userHistories.splice(0, 2);
     }
+
+    saveMemory(); // ⬅️ AUTO SAVE
 
   } catch (err) {
     console.error("❌ Error:", err.message);
