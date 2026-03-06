@@ -3,7 +3,7 @@ const input = document.getElementById("input");
 const send = document.getElementById("send");
 
 // ==============================
-// AUTO USER ID (Simpan di browser)
+// AUTO USER ID
 // ==============================
 let userId = localStorage.getItem("userId");
 if (!userId) {
@@ -12,19 +12,16 @@ if (!userId) {
 }
 
 // ==============================
-// CONFIG SERVER
+// SERVER URL
 // ==============================
-// Ganti sesuai kebutuhan:
-
-// const SERVER_URL = "http://localhost:3000/chat"; // OFFLINE
-const SERVER_URL = "https://lobate-louetta-uniconoclastically.ngrok-free.dev/chat"; // ONLINE
+const SERVER_URL = "https://lobate-louetta-uniconoclastically.ngrok-free.dev/chat";
 
 // ==============================
-// TAMBAH MESSAGE KE CHAT
+// TAMBAH MESSAGE
 // ==============================
 function appendMessage(text, sender) {
   const div = document.createElement("div");
-  div.classList.add("message", sender); // pakai class dari CSS modern tadi
+  div.classList.add("message", sender);
   div.innerText = text;
   chat.appendChild(div);
 
@@ -35,7 +32,7 @@ function appendMessage(text, sender) {
 }
 
 // ==============================
-// LOADING / TYPING EFFECT
+// TYPING
 // ==============================
 function showTyping() {
   const typing = document.createElement("div");
@@ -43,7 +40,6 @@ function showTyping() {
   typing.id = "typing";
   typing.innerText = "Reze sedang mengetik...";
   chat.appendChild(typing);
-  chat.scrollTop = chat.scrollHeight;
 }
 
 function removeTyping() {
@@ -63,13 +59,18 @@ async function sendMessage() {
   showTyping();
 
   try {
+
     const res = await fetch(SERVER_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true"
+      },
       body: JSON.stringify({ message, userId })
     });
 
     const data = await res.json();
+
     removeTyping();
     appendMessage(data.reply, "bot");
 
@@ -81,7 +82,7 @@ async function sendMessage() {
 }
 
 // ==============================
-// EVENT LISTENER
+// EVENTS
 // ==============================
 send.addEventListener("click", sendMessage);
 
