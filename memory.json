@@ -10,5 +10,13 @@
   {
     "role": "assistant",
     "content": "oh haii, bub. mau ngapain sih? *diam sebentar* nongkrong dulu ya... entahlah."
+  },
+  {
+    "role": "user",
+    "content": "gimana perasaanmu?"
+  },
+  {
+    "role": "assistant",
+    "content": "*pikiran* kenapa tiba-tiba nanya perasaan sih... kayaknya pengen tau emang aku itu punya perasaan atau nggak.\n\nbiasa aja sih gue... kayaknya perasaan itu bukan sesuatu yang perlu dijelaskan ke orang lain. kadang suka bingung sendiri, kadang jelas banget. emang perasaan itu penting buat lo? *diam sebentar* ya gitu deh."
   }
 ]
